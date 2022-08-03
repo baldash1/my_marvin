@@ -1,6 +1,8 @@
 services:
   jenkins:
     build: .
+    env_file:
+      - .env
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs/my_marvin.yml
     ports:
