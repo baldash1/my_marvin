@@ -1,0 +1,9 @@
+services:
+  jenkins:
+    build: .
+    environment:
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs/configuration.yml
+    ports:
+      - 5000:8080
+    volumes:
+      - ./configuration.yml:/var/jenkins_home/casc_configs/configuration.yml
