@@ -40,11 +40,24 @@ job('Tools/SEED') {
                 }
                 
                 properties {
-                    githubProjectUrl("$GITHUB_NAME")
+                    githubProjectUrl("https://github.com/${GITHUB_NAME}.git")
                 }
 
                  triggers {
-                    scm('* * * * *')
+                    scm("* * * * *")
+                }
+                
+                scm {
+                    git {
+                        remote {
+                            name("origin")
+                            url("https://github.com/${GITHUB_NAME}.git")
+                        }
+                        extensions {
+                            cleanAfterCheckout()
+                            //relativeTargetDirectory("test")
+                        }
+                    }
                 }
 
                 steps {
