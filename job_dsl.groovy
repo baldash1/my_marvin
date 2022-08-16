@@ -23,28 +23,38 @@ job('Tools/clone-repository') {
 
 job('Tools/SEED') {
     parameters {
-        stringParam('GITHUB_NAME', null, 'GitHub repository owner/repo_name (e.g.: "EpitechIT31000/chocolatine")')
+        stringParam('GITHUB_NAME', null, 'GitHub repiository owner/repo_name (e.g.: "EpitechIT31000/chocolatine")')
         stringParam('DISPLAY_NAME', null, 'Display name for job')
     }
     
     steps {
-        shell('git clone $GIT_REPOSITORY_URL')
+        dsl({
+            text('''
+            job("$DISPLAY_NAME") {
+                wrappers {
+                   preBuildCleanup {
+                        includePattern('**/target/**')
+                        deleteDirectories()
+                        cleanupParameter('CLEANUP')
+                    }
+                }
+                
+                properties {
+                    githubProjectUrl("$GITHUB_NAME")
+                }
+
+                 triggers {
+                    scm('* * * * *')
+                }
+
+                steps {
+                    shell("make fclean")
+                    shell("make")
+                    shell("make tests_run")
+                    shell("make clean")
+                }
+            }
+            ''')
+        })
     }
 }
-
-// job('Disk usage') {
-//     steps {
-//         shell('df')
-//     }
-// }
-
-// job('Polite DDoS') {
-//     parameters {
-//         stringParam('NAME', 'Hogu', 'name of user')
-//     }
-//     steps {
-//         shell('echo "Hello dear "$NAME"!"')
-//         shell('date')
-//         shell('echo "This is your DDoS number "$BUILD_NUMBER"."')
-//     }
-// }
